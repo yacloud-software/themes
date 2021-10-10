@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package themes;
+option java_package = "net.conradwood.apis.themes";
+import "golang.conradwood.net/apis/common/common.proto";
+import "golang.conradwood.net/apis/h2gproxy/h2gproxy.proto";
+
+// comment: message pingresponse
+message PingResponse {
+  // comment: field pingresponse.response
+  string Response = 1;
+}
+
+message ThemeResponse {
+  string SmallLogoName=1; // e.g. "singingcat_logo.png"
+  string FavIconName=2; // e.g. "favicon.ico"
+  string HeaderText=3; // e.g. "SingingCat ltd"
+  string CorporateCss=4; // e.g. cnw.css
+}
+message HostThemeRequest {
+  string Host=1; // e.g. www.conradwood.net
+}
+
+// get themes for a given access by someone
+service Themes {
+  // comment: rpc ping
+  rpc Ping(common.Void) returns (PingResponse);
+  // DEPRECATED
+   rpc GetHTMLTheme(h2gproxy.ServeRequest) returns (ThemeResponse);
+  // get some defaults for a given webrequest. this proto is expected to grow
+  rpc GetThemeByHost(HostThemeRequest) returns (ThemeResponse);
+}
+
+
