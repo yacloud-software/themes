@@ -159,3 +159,9 @@ func (e *echoServer) GetHeaderText(ctx context.Context, req *pb.HostThemeRequest
 	}
 	return res, nil
 }
+func (e *echoServer) ServeURL(ctx context.Context, req *h2gproxy.ServeRequest) (*pb.ServeResponse, error) {
+	res := &pb.ServeResponse{
+		IsAuthoritative: false,
+	}
+	return res, nil
+}
