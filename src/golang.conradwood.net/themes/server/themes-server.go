@@ -101,6 +101,9 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if !utils.FileExists(d_filename) {
 		d_filename = f + "/default/" + filename
 	}
+	if !utils.FileExists(d_filename) {
+		fmt.Printf("Warning file \"%s\" does not exist", d_filename)
+	}
 	fmt.Printf("File: %s\n", d_filename)
 	u, err := utils.ReadFile(d_filename)
 	if err != nil {
@@ -125,9 +128,10 @@ func (e *echoServer) GetCSS(ctx context.Context, req *pb.HostThemeRequest) (*pb.
 	if err != nil {
 		return nil, err
 	}
+	s := CSS_PREFIX + string(f)
 	res := &pb.CSS{
 		Filename: "stylesheet.css",
-		Data:     CSS_PREFIX + string(f),
+		Data:     []byte(s),
 	}
 	return res, nil
 }
