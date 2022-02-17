@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"golang.conradwood.net/apis/common"
 	"golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/themes"
 	"golang.conradwood.net/go-easyops/server"
@@ -12,6 +11,11 @@ import (
 	"google.golang.org/grpc"
 	"os"
 	"strings"
+)
+
+const (
+	CSS_PREFIX = `/* served by themes-server */
+`
 )
 
 var (
@@ -43,10 +47,6 @@ func main() {
 * grpc functions
 ************************************/
 
-func (e *echoServer) Ping(ctx context.Context, req *common.Void) (*pb.PingResponse, error) {
-	resp := &pb.PingResponse{Response: "pingresponse"}
-	return resp, nil
-}
 func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeRequest) (*pb.ThemeResponse, error) {
 
 	// default
@@ -54,6 +54,7 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 		SmallLogoName: "cnw_logo.png",
 		FavIconName:   "cnw_favicon.ico",
 		HeaderText:    "Conrad Wood (cnw)",
+		ThemeName:     "default",
 	}
 
 	if strings.Contains(req.Host, "singingcat") {
@@ -61,6 +62,7 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 			SmallLogoName: "singingcat_logo.png",
 			FavIconName:   "favicon.ico",
 			HeaderText:    "SingingCat - IoT as a Service",
+			ThemeName:     "singingcat",
 		}
 	}
 	if strings.Contains(req.Host, "youritguru") {
@@ -68,6 +70,7 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 			SmallLogoName: "guru.jpeg",
 			FavIconName:   "favicon.ico",
 			HeaderText:    "The IT Guru - All of Information Technology as a Service",
+			ThemeName:     "youritguru",
 		}
 	}
 	if strings.Contains(req.Host, "ionos") {
@@ -76,6 +79,7 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 			FavIconName:   "ionos.ico",
 			HeaderText:    "IONOS IoT",
 			CorporateCss:  "ionos.css",
+			ThemeName:     "ionos",
 		}
 	}
 
@@ -83,4 +87,71 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 }
 func (e *echoServer) GetHTMLTheme(ctx context.Context, req *h2gproxy.ServeRequest) (*pb.ThemeResponse, error) {
 	return e.GetThemeByHost(ctx, &pb.HostThemeRequest{Host: req.Host})
+}
+func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeRequest, filename string) ([]byte, error) {
+	f, err := utils.FindFile("templates/")
+	if err != nil {
+		return nil, err
+	}
+	t, err := e.GetThemeByHost(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	d_filename := f + "/" + t.ThemeName + "/" + filename
+	if !utils.FileExists(d_filename) {
+		d_filename = f + "/default/" + filename
+	}
+	fmt.Printf("File: %s\n", d_filename)
+	u, err := utils.ReadFile(d_filename)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+func (e *echoServer) GetLogo(ctx context.Context, req *pb.HostThemeRequest) (*pb.Image, error) {
+	f, err := e.getFileForTheme(ctx, req, "logo.png")
+	if err != nil {
+		return nil, err
+	}
+	res := &pb.Image{
+		Filename: "logo.png",
+		MimeType: "image/png",
+		Data:     f,
+	}
+	return res, nil
+}
+func (e *echoServer) GetCSS(ctx context.Context, req *pb.HostThemeRequest) (*pb.CSS, error) {
+	f, err := e.getFileForTheme(ctx, req, "stylesheet.css")
+	if err != nil {
+		return nil, err
+	}
+	res := &pb.CSS{
+		Filename: "stylesheet.css",
+		Data:     CSS_PREFIX + string(f),
+	}
+	return res, nil
+}
+func (e *echoServer) GetFavIcon(ctx context.Context, req *pb.HostThemeRequest) (*pb.Image, error) {
+	f, err := e.getFileForTheme(ctx, req, "favicon.ico")
+	if err != nil {
+		return nil, err
+	}
+	res := &pb.Image{
+		Filename: "favicon.ico",
+		MimeType: "image/png",
+		Data:     f,
+	}
+	return res, nil
+}
+func (e *echoServer) GetHeaderText(ctx context.Context, req *pb.HostThemeRequest) (*pb.Text, error) {
+	f, err := e.getFileForTheme(ctx, req, "heading.txt")
+	if err != nil {
+		return nil, err
+	}
+	s := string(f)
+	s = strings.Trim(s, "\n")
+	res := &pb.Text{
+		Text: s,
+	}
+	return res, nil
 }
