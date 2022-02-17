@@ -26,7 +26,7 @@ message Text {
 }
 message CSS {
   string Filename=1;
-  string Data=2;
+  bytes Data=2;
 }
 
 // get themes for a given access by someone
