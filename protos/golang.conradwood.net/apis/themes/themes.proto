@@ -28,7 +28,14 @@ message CSS {
   string Filename=1;
   bytes Data=2;
 }
-
+message URLRequest {
+  string Host=1;
+  string Path=2;
+}
+message ServeResponse {
+  h2gproxy.ServeResponse Response=1;
+  bool IsAuthoritative=2;
+}
 // get themes for a given access by someone
 service Themes {
   // DEPRECATED
@@ -40,6 +47,7 @@ service Themes {
   rpc GetFavIcon(HostThemeRequest) returns (Image);
   rpc GetHeaderText(HostThemeRequest) returns (Text);
   rpc GetCSS(HostThemeRequest) returns (CSS);
+  rpc ServeURL(h2gproxy.ServeRequest) returns (ServeResponse);
 }
 
 
