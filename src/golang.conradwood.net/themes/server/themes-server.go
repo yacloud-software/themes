@@ -72,6 +72,13 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 			HeaderText:    "SingingCat - IoT as a Service",
 			ThemeName:     "singingcat",
 		}
+	} else if strings.Contains(req.Host, "planetary") {
+		res = &pb.ThemeResponse{
+			SmallLogoName: "logo.png",
+			FavIconName:   "favicon.ico",
+			HeaderText:    "Planetary Processing",
+			ThemeName:     "planetaryprocessing",
+		}
 	} else if strings.Contains(req.Host, "youritguru") {
 		res = &pb.ThemeResponse{
 			SmallLogoName: "guru.jpeg",
