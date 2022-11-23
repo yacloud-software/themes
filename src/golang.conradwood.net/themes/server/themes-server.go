@@ -10,7 +10,9 @@ import (
 	"golang.conradwood.net/go-easyops/server"
 	"golang.conradwood.net/go-easyops/utils"
 	"google.golang.org/grpc"
+	"mime"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -184,5 +186,21 @@ func (e *echoServer) ServeURL(ctx context.Context, req *h2gproxy.ServeRequest) (
 	res := &pb.ServeResponse{
 		IsAuthoritative: false,
 	}
+	p := strings.TrimPrefix(req.Path, "/")
+	f, err := e.getFileForTheme(ctx, &pb.HostThemeRequest{Host: req.Host}, p)
+	if err == nil {
+		res.IsAuthoritative = true
+		res.Response = buildResponse(p, f)
+		return res, err
+	}
+
 	return res, nil
+}
+func buildResponse(filename string, content []byte) *h2gproxy.ServeResponse {
+	mt := mime.TypeByExtension(filepath.Ext(filename))
+	res := &h2gproxy.ServeResponse{
+		MimeType: mt,
+		Body:     content,
+	}
+	return res
 }
