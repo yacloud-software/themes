@@ -1,8 +1,15 @@
 // client create: ThemesClient
+/*
+  Created by /home/cnw/devel/go/go-tools/src/golang.conradwood.net/gotools/protoc-gen-cnw/protoc-gen-cnw.go
+*/
+
 /* geninfo:
    filename  : protos/golang.conradwood.net/apis/themes/themes.proto
    gopackage : golang.conradwood.net/apis/themes
    importname: ai_0
+   clientfunc: GetThemes
+   serverfunc: NewThemes
+   lookupfunc: ThemesLookupID
    varname   : client_ThemesClient_0
    clientname: ThemesClient
    servername: ThemesServer
@@ -33,8 +40,9 @@ func GetThemesClient() ThemesClient {
        return client_ThemesClient_0
     }
 
-    client_ThemesClient_0 = NewThemesClient(client.Connect("themes.Themes"))
+    client_ThemesClient_0 = NewThemesClient(client.Connect(ThemesLookupID()))
     lock_ThemesClient_0.Unlock()
     return client_ThemesClient_0
 }
 
+func ThemesLookupID() string { return "themes.Themes" } // returns the ID suitable for lookup in the registry. treat as opaque, subject to change.
