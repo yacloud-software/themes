@@ -115,6 +115,10 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if err != nil {
 		return nil, err
 	}
+	i := strings.Index(filename, "/")
+	if i != -1 {
+		filename = filename[i+1:]
+	}
 	d_filename := fdir + "/" + t.ThemeName + "/" + filename
 	fc := file_cache.Get(d_filename)
 	if fc != nil {
