@@ -74,6 +74,13 @@ func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeReques
 			HeaderText:    "SingingCat - IoT as a Service",
 			ThemeName:     "singingcat",
 		}
+	} else if strings.Contains(req.Host, "max") {
+		res = &pb.ThemeResponse{
+			SmallLogoName: "max_logo.png",
+			FavIconName:   "favicon.ico",
+			HeaderText:    "MaxWoodArt Fashion",
+			ThemeName:     "maxwoodart",
+		}
 	} else if strings.Contains(req.Host, "planetary") {
 		res = &pb.ThemeResponse{
 			SmallLogoName: "logo.png",
@@ -130,7 +137,7 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if !utils.FileExists(d_filename) {
 		fmt.Printf("Warning file \"%s\" does not exist", d_filename)
 	}
-	fmt.Printf("File: %s\n", d_filename)
+	fmt.Printf("[%s] File: %s\n", t.ThemeName, d_filename)
 	u, err := utils.ReadFile(d_filename)
 	if err != nil {
 		return nil, err
