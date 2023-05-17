@@ -23,6 +23,7 @@ const (
 )
 
 var (
+	use_cache  = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
 	port       = flag.Int("port", 4100, "The grpc server port")
 	file_cache = cache.New("filecontent", time.Duration(150)*time.Hour, 100)
 	fdir       = ""
@@ -128,7 +129,7 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	}
 	d_filename := fdir + "/" + t.ThemeName + "/" + filename
 	fc := file_cache.Get(d_filename)
-	if fc != nil {
+	if fc != nil && *use_cache {
 		return fc.(*fcache).Data, fc.(*fcache).Error
 	}
 	if !utils.FileExists(d_filename) {
