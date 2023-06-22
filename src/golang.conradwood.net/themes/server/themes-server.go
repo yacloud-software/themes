@@ -23,6 +23,7 @@ const (
 )
 
 var (
+	templ_dir  = flag.String("templates", "templates/", "template directory")
 	use_cache  = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
 	port       = flag.Int("port", 4100, "The grpc server port")
 	file_cache = cache.New("filecontent", time.Duration(150)*time.Hour, 100)
@@ -113,7 +114,7 @@ func (e *echoServer) GetHTMLTheme(ctx context.Context, req *h2gproxy.ServeReques
 }
 func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeRequest, filename string) ([]byte, error) {
 	if fdir == "" {
-		f, err := utils.FindFile("templates/")
+		f, err := utils.FindFile(*templ_dir)
 		if err != nil {
 			return nil, err
 		}
