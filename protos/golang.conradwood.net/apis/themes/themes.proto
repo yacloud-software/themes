@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package themes;
+option go_package = "golang.conradwood.net/apis/themes";
 option java_package = "net.conradwood.apis.themes";
 import "golang.conradwood.net/apis/common/common.proto";
 import "golang.conradwood.net/apis/h2gproxy/h2gproxy.proto";
@@ -49,5 +50,3 @@ service Themes {
   rpc GetCSS(HostThemeRequest) returns (CSS);
   rpc ServeURL(h2gproxy.ServeRequest) returns (ServeResponse);
 }
-
-
