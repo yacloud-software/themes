@@ -1,6 +1,6 @@
 // client create: ThemesClient
 /*
-  Created by /srv/home/cnw/devel/go/go-tools/src/golang.conradwood.net/gotools/protoc-gen-cnw/protoc-gen-cnw.go
+  Created by /home/cnw/devel/go/yatools/src/golang.yacloud.eu/yatools/protoc-gen-cnw/protoc-gen-cnw.go
 */
 
 /* geninfo:
@@ -13,7 +13,7 @@
    varname   : client_ThemesClient_0
    clientname: ThemesClient
    servername: ThemesServer
-   gscvname  : themes.Themes
+   gsvcname  : themes.Themes
    lockname  : lock_ThemesClient_0
    activename: active_ThemesClient_0
 */
@@ -46,3 +46,7 @@ func GetThemesClient() ThemesClient {
 }
 
 func ThemesLookupID() string { return "themes.Themes" } // returns the ID suitable for lookup in the registry. treat as opaque, subject to change.
+
+func init() {
+   client.RegisterDependency("themes.Themes")
+}
