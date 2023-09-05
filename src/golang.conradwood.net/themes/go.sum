@@ -40,8 +40,8 @@ golang.conradwood.net/apis/framework v1.1.2516 h1:6Wiad32cB8yHXvKjZKei4GIBR1+GyG
 golang.conradwood.net/apis/framework v1.1.2516/go.mod h1:IRXLOeHRmx5wBVBvN+doAtOhp4r+nopgp8eezwjYWls=
 golang.conradwood.net/apis/goeasyops v1.1.2516 h1:Ws2i/bKAOHyWT4PnVaXkrBi8WTQ6Ifhviatp41q0hPY=
 golang.conradwood.net/apis/goeasyops v1.1.2516/go.mod h1:1M5HijNjAQ4FGcgJ//2/CYPLp6mBoLksCSSBTHJ2xmA=
-golang.conradwood.net/apis/h2gproxy v1.1.2516 h1:/knWM5LbFS1CCLkIKRhXcQ15OJJp8lmnS9YqDPg679k=
-golang.conradwood.net/apis/h2gproxy v1.1.2516/go.mod h1:bvc5toh+NvloHpByyxnR+0U+PY+J4gyHWHHImHWNmoc=
+golang.conradwood.net/apis/h2gproxy v1.1.2526 h1:XTGkz3WviKOe2+AQH+ZLxRWSXOSZTN9clxWdc78VB/k=
+golang.conradwood.net/apis/h2gproxy v1.1.2526/go.mod h1:hV2g2yHAcl+LLgJefvNJmQGMHFOZCJHPXS5lp3EZb+I=
 golang.conradwood.net/apis/objectstore v1.1.2516 h1:xvAvdLTfU/JRCtqwnYenIfK5vap6reZRShuy9IoahR4=
 golang.conradwood.net/apis/objectstore v1.1.2516/go.mod h1:TK5eVSISNcGgjoVcmsh7N/hjCcsB5DMse/VyqX0GOPM=
 golang.conradwood.net/apis/registry v1.1.2516 h1:8sdHcNLeDWDiKnJ/IAMGxXtjwCb9wkmgpWVRpUtIz30=
