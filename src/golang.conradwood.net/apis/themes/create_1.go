@@ -49,4 +49,5 @@ func ThemesLookupID() string { return "themes.Themes" } // returns the ID suitab
 
 func init() {
    client.RegisterDependency("themes.Themes")
+   AddService("themes.Themes")
 }
