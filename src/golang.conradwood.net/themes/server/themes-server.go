@@ -43,13 +43,13 @@ func main() {
 
 	sd := server.NewServerDef()
 	sd.SetPort(*port)
-	sd.Register = server.Register(
+	sd.SetRegister(server.Register(
 		func(server *grpc.Server) error {
 			e := new(echoServer)
 			pb.RegisterThemesServer(server, e)
 			return nil
 		},
-	)
+	))
 	err := server.ServerStartup(sd)
 	utils.Bail("Unable to start server", err)
 	os.Exit(0)
@@ -217,3 +217,4 @@ func buildResponse(filename string, content []byte) *h2gproxy.ServeResponse {
 	}
 	return res
 }
+

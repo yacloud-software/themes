@@ -48,3 +48,4 @@ func getThemeRequest() *pb.HostThemeRequest {
 	res := &pb.HostThemeRequest{Host: flag.Args()[0]}
 	return res
 }
+

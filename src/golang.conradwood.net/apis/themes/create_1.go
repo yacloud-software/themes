@@ -51,3 +51,4 @@ func init() {
    client.RegisterDependency("themes.Themes")
    AddService("themes.Themes")
 }
+
