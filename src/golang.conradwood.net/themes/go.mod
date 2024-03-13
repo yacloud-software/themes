@@ -5,7 +5,7 @@ go 1.18
 require (
 	golang.conradwood.net/apis/h2gproxy v1.1.2643
 	golang.conradwood.net/apis/themes v1.1.1549
-	golang.conradwood.net/go-easyops v0.1.25710
+	golang.conradwood.net/go-easyops v0.1.25823
 	google.golang.org/grpc v1.62.1
 )
 
