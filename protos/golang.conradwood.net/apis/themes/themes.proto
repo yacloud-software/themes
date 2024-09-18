@@ -50,3 +50,4 @@ service Themes {
   rpc GetCSS(HostThemeRequest) returns (CSS);
   rpc ServeURL(h2gproxy.ServeRequest) returns (ServeResponse);
 }
+
