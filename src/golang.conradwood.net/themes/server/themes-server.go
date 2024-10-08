@@ -152,7 +152,7 @@ func (e *echoServer) getSingleFileForTheme(ctx context.Context, req *pb.HostThem
 		d_filename = fdir + "/default/" + filename
 	}
 	if !utils.FileExists(d_filename) {
-		fmt.Printf("Warning file \"%s\" does not exist", d_filename)
+		fmt.Printf("Warning file \"%s\" does not exist\n", d_filename)
 	}
 	debugf("[%s] File: %s\n", t.ThemeName, d_filename)
 	u, err := utils.ReadFile(d_filename)
