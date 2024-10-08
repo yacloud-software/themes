@@ -15,6 +15,7 @@ message ThemeResponse {
 }
 message HostThemeRequest {
   string Host=1; // e.g. www.conradwood.net
+  string UserAgent=2;
 }
 
 message Image {
