@@ -26,6 +26,7 @@ var (
 	templ_dir  = flag.String("templates", "templates/", "template directory")
 	use_cache  = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
 	port       = flag.Int("port", 4100, "The grpc server port")
+	debug      = flag.Bool("debug", false, "debug mode")
 	file_cache = cache.New("filecontent", time.Duration(150)*time.Hour, 100)
 	fdir       = ""
 )
@@ -60,7 +61,7 @@ func main() {
 ************************************/
 
 func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeRequest) (*pb.ThemeResponse, error) {
-
+	debugf("Theme for host \"%s\" for useragent \"%s\"\n", req.Host, req.UserAgent)
 	// default
 	res := &pb.ThemeResponse{
 		SmallLogoName: "cnw_logo.png",
@@ -113,6 +114,20 @@ func (e *echoServer) GetHTMLTheme(ctx context.Context, req *h2gproxy.ServeReques
 	return e.GetThemeByHost(ctx, &pb.HostThemeRequest{Host: req.Host})
 }
 func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeRequest, filename string) ([]byte, error) {
+	b, err := e.getSingleFileForTheme(ctx, req, filename)
+	if err != nil {
+		return nil, err
+	}
+	if strings.Contains(strings.ToLower(req.UserAgent), "android") {
+		b2, err := e.getSingleFileForTheme(ctx, req, "android_"+filename)
+		if err == nil {
+			b = append(b, b2...)
+		}
+	}
+	return b, nil
+}
+func (e *echoServer) getSingleFileForTheme(ctx context.Context, req *pb.HostThemeRequest, filename string) ([]byte, error) {
+	debugf("File \"%s\" for host \"%s\" for useragent \"%s\"\n", filename, req.Host, req.UserAgent)
 	if fdir == "" {
 		f, err := utils.FindFile(*templ_dir)
 		if err != nil {
@@ -139,7 +154,7 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if !utils.FileExists(d_filename) {
 		fmt.Printf("Warning file \"%s\" does not exist", d_filename)
 	}
-	fmt.Printf("[%s] File: %s\n", t.ThemeName, d_filename)
+	debugf("[%s] File: %s\n", t.ThemeName, d_filename)
 	u, err := utils.ReadFile(d_filename)
 	if err != nil {
 		return nil, err
@@ -217,8 +232,9 @@ func buildResponse(filename string, content []byte) *h2gproxy.ServeResponse {
 	}
 	return res
 }
-
-
-
-
-
+func debugf(format string, args ...interface{}) {
+	if !*debug {
+		return
+	}
+	fmt.Printf(format, args...)
+}
