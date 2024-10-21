@@ -38,6 +38,12 @@ message ServeResponse {
   h2gproxy.ServeResponse Response=1;
   bool IsAuthoritative=2;
 }
+message HTMLTemplate {
+  bytes Prefix=1; // add before your html snippet
+  bytes SectionPrefix=2; // add before each section
+  bytes SectionSuffix=3; // add after each section
+  bytes Suffix=4; // add after your html snippet
+}
 // get themes for a given access by someone
 service Themes {
   // DEPRECATED
@@ -50,5 +56,9 @@ service Themes {
   rpc GetHeaderText(HostThemeRequest) returns (Text);
   rpc GetCSS(HostThemeRequest) returns (CSS);
   rpc ServeURL(h2gproxy.ServeRequest) returns (ServeResponse);
+  /*
+    if you have an html snippet, use this
+   */
+  rpc GetHTMLTemplate(HostThemeRequest) returns (HTMLTemplate);
 }
 
