@@ -4,17 +4,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"mime"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/themes"
 	"golang.conradwood.net/go-easyops/cache"
 	"golang.conradwood.net/go-easyops/server"
 	"golang.conradwood.net/go-easyops/utils"
 	"google.golang.org/grpc"
-	"mime"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 const (
@@ -198,6 +199,28 @@ func (e *echoServer) GetFavIcon(ctx context.Context, req *pb.HostThemeRequest) (
 	}
 	return res, nil
 }
+func (e *echoServer) GetHTMLTemplate(ctx context.Context, req *pb.HostThemeRequest) (*pb.HTMLTemplate, error) {
+	var err error
+	res := &pb.HTMLTemplate{}
+	res.Prefix, err = e.getFileForTheme(ctx, req, "page_prefix.html")
+	if err != nil {
+		return nil, err
+	}
+	res.Suffix, err = e.getFileForTheme(ctx, req, "page_suffix.html")
+	if err != nil {
+		return nil, err
+	}
+	res.SectionPrefix, err = e.getFileForTheme(ctx, req, "section_prefix.html")
+	if err != nil {
+		return nil, err
+	}
+	res.SectionSuffix, err = e.getFileForTheme(ctx, req, "section_suffix.html")
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 func (e *echoServer) GetHeaderText(ctx context.Context, req *pb.HostThemeRequest) (*pb.Text, error) {
 	f, err := e.getFileForTheme(ctx, req, "heading.txt")
 	if err != nil {
