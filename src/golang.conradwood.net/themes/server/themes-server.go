@@ -218,6 +218,7 @@ func (e *echoServer) GetHTMLTemplate(ctx context.Context, req *pb.HostThemeReque
 	if err != nil {
 		return nil, err
 	}
+	res.Prefix = apply_defaults(ctx, req, res.Prefix)
 	return res, nil
 }
 
