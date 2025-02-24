@@ -24,12 +24,13 @@ const (
 )
 
 var (
-	templ_dir  = flag.String("templates", "templates/", "template directory")
-	use_cache  = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
-	port       = flag.Int("port", 4100, "The grpc server port")
-	debug      = flag.Bool("debug", false, "debug mode")
-	file_cache = cache.New("filecontent", time.Duration(150)*time.Hour, 100)
-	fdir       = ""
+	MOBILE_PHONE_USER_AGENT = []string{"android", "iphone"}
+	templ_dir               = flag.String("templates", "templates/", "template directory")
+	use_cache               = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
+	port                    = flag.Int("port", 4100, "The grpc server port")
+	debug                   = flag.Bool("debug", false, "debug mode")
+	file_cache              = cache.New("filecontent", time.Duration(150)*time.Hour, 100)
+	fdir                    = ""
 )
 
 type fcache struct {
@@ -119,7 +120,14 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if err != nil {
 		return nil, err
 	}
-	if strings.Contains(strings.ToLower(req.UserAgent), "android") {
+	is_mobile := false
+	for _, mua := range MOBILE_PHONE_USER_AGENT {
+		if strings.Contains(strings.ToLower(req.UserAgent), mua) {
+			is_mobile = true
+			break
+		}
+	}
+	if is_mobile {
 		b2, err := e.getSingleFileForTheme(ctx, req, "android_"+filename)
 		if err == nil {
 			b = append(b, b2...)
