@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"golang.conradwood.net/apis/common"
 	"golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/themes"
 	"golang.conradwood.net/go-easyops/cache"
@@ -42,10 +43,12 @@ type echoServer struct {
 
 func main() {
 	flag.Parse()
+	server.SetHealth(common.Health_STARTING)
 	fmt.Printf("Starting ThemesServer...\n")
 
 	sd := server.NewServerDef()
 	sd.SetPort(*port)
+	sd.SetOnStartupCallback(startup)
 	sd.SetRegister(server.Register(
 		func(server *grpc.Server) error {
 			e := new(echoServer)
@@ -57,14 +60,13 @@ func main() {
 	utils.Bail("Unable to start server", err)
 	os.Exit(0)
 }
-
-/************************************
-* grpc functions
-************************************/
+func startup() {
+	server.SetHealth(common.Health_READY)
+}
 
 func (e *echoServer) GetThemeByHost(ctx context.Context, req *pb.HostThemeRequest) (*pb.ThemeResponse, error) {
 	debugf("Theme for host \"%s\" for useragent \"%s\"\n", req.Host, req.UserAgent)
-	// default
+
 	res := &pb.ThemeResponse{
 		SmallLogoName: "cnw_logo.png",
 		FavIconName:   "cnw_favicon.ico",
