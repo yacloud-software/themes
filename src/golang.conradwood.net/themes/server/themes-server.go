@@ -25,6 +25,7 @@ const (
 )
 
 var (
+	always_mobile           = flag.Bool("always_mobile", false, "if true, always serve mobile css")
 	MOBILE_PHONE_USER_AGENT = []string{"android", "iphone"}
 	templ_dir               = flag.String("templates", "templates/", "template directory")
 	use_cache               = flag.Bool("use_cache", true, "if false, never cache, load from disk each time")
@@ -122,7 +123,7 @@ func (e *echoServer) getFileForTheme(ctx context.Context, req *pb.HostThemeReque
 	if err != nil {
 		return nil, err
 	}
-	is_mobile := false
+	is_mobile := *always_mobile
 	for _, mua := range MOBILE_PHONE_USER_AGENT {
 		if strings.Contains(strings.ToLower(req.UserAgent), mua) {
 			is_mobile = true
