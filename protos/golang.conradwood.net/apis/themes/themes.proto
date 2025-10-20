@@ -55,6 +55,10 @@ service Themes {
   rpc GetFavIcon(HostThemeRequest) returns (Image);
   rpc GetHeaderText(HostThemeRequest) returns (Text);
   rpc GetCSS(HostThemeRequest) returns (CSS);
+  // serve a url from themes server. report if it is able to do so
+  // this is intented to be called by other webservers before attempting
+  // to serve a request.
+  // if themes can handle it, let it
   rpc ServeURL(h2gproxy.ServeRequest) returns (ServeResponse);
   /*
     if you have an html snippet, use this
